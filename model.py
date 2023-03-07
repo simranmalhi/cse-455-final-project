@@ -8,11 +8,21 @@ class ConvNet(nn.Module):
     def __init__(self):
         super(ConvNet, self).__init__()
         # TODO
-        self.c1 = nn.Conv2d()
+        RGB = 3 # rgb channel count
+        LETTER_OUTPUT = 26 # output 26 letters
+        image_size = 28 # pixel width of image
+        filter_size = 5
+        c1_out_size = 6
+        c2_out_size = 12
+        # 3 channel input, 6 channel output, applies 5x5 filters
+        self.c1 = nn.Conv2d(RGB, c1_out_size, filter_size)
         self.bn1 = nn.BatchNorm2d()
-        self.c2 = nn.Conv2d()
+        self.c2 = nn.Conv2d(c1_out_size, c2_out_size, filter_size)
         self.bn2 = nn.BatchNorm2d()
-        self.output = nn.Linear() # (?, 26)
+
+        ## we can do the math or just run and see what size it needs to be
+        new_image_size = image_size-(2*(filter_size-1))
+        self.output = nn.Linear(RGB*new_image_size*new_image_size, LETTER_OUTPUT)
 
     def forward(self, x):
         # go through layers
