@@ -12,8 +12,8 @@ class ConvNet(nn.Module):
         self.bn1 = nn.BatchNorm2d()
         self.c2 = nn.Conv2d()
         self.bn2 = nn.BatchNorm2d()
-        self.output = nn.Linear()
-    
+        self.output = nn.Linear() # (?, 26)
+
     def forward(self, x):
         # go through layers
         x = self.c1(x)
