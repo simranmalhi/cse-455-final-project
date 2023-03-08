@@ -12,10 +12,11 @@ class ConvNet(nn.Module):
         # TODO
         RGB = 3 # rgb channel count
         LETTER_OUTPUT = 26 # output 26 letters
-        image_size = 28 # pixel width of image
+        IMAGE_SIZE = 28 # pixel width of image
         filter_size = 5
         c1_out_size = 6
         c2_out_size = 12
+
         # 3 channel input, 6 channel output, applies 5x5 filters
         self.c1 = nn.Conv2d(RGB, c1_out_size, filter_size)
         self.bn1 = nn.BatchNorm2d()
@@ -23,7 +24,7 @@ class ConvNet(nn.Module):
         self.bn2 = nn.BatchNorm2d()
 
         ## we can do the math or just run and see what size it needs to be
-        new_image_size = image_size-(2*(filter_size-1))
+        new_image_size = IMAGE_SIZE-(2*(filter_size-1))
         self.output = nn.Linear(RGB*new_image_size*new_image_size, LETTER_OUTPUT)
 
     def forward(self, x):
@@ -44,7 +45,7 @@ class ConvNet(nn.Module):
         return self.forward(x) # gets and returns prediction
 
     def loss(self, predictions, labels):
-        return nn.CrossEntropyLoss(predictions, labels)
+        return nn.CrossEntropyLoss(predictions, labels, reduction='mean')
 
 
 # returns mean loss for single epoch
@@ -85,13 +86,17 @@ def test(model, test_loader):
     correct = 0
 
     with torch.no_grad():
-        for batch_idx, (inputs, labels) in enumerate(test_loader):
+        for batch_idx, batch in enumerate(test_loader):
+            inputs, labels = batch[0], batch[1]
+            # TODO: GPU
+            # inputs, labels = batch[0].to(device), batch[1].to(device)
+
             # get prediction
             output = model(inputs)
             _, predicted = torch.max(output.data, 1)
 
             # calculate loss
-            test_loss += model.loss(output, labels, reduction='mean').item()
+            test_loss += model.loss(output, labels).item()
             num_correct = (predicted == labels).sum().item()
             correct += num_correct
 
