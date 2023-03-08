@@ -7,6 +7,8 @@ import tqdm
 class ConvNet(nn.Module):
     def __init__(self):
         super(ConvNet, self).__init__()
+        # init
+
         # TODO
         RGB = 3 # rgb channel count
         LETTER_OUTPUT = 26 # output 26 letters
@@ -45,22 +47,32 @@ class ConvNet(nn.Module):
         return nn.CrossEntropyLoss(predictions, labels)
 
 
-def train(model, optimizer, train_loader, epoch, log_interval):
+# returns mean loss for single epoch
+def train(model, optimizer, train_loader, epoch, log_interval, device):
     model.train()
     losses = []
-    for batch_idx, (inputs, labels) in enumerate(tqdm.tqdm(train_loader)):
-        # get prediction
+    for batch_idx, batch in enumerate(tqdm.tqdm(train_loader)):
+        # get the inputs; data is a list of [inputs, labels]
+        inputs, labels = batch[0], batch[1]
+        # TODO: GPU
+        # inputs, labels = batch[0].to(device), batch[1].to(device)
+
+        # zero parameter gradients
         optimizer.zero_grad()
+        #  get prediction (forward)
         output = model(inputs)
 
         # calculate losses
         loss = model.loss(output, labels)
-        losses.append(loss.item())
 
+        # backward propagate
         loss.backward()
+
+        # take a step in gradient direction
         optimizer.step()
 
         # print losses
+        losses.append(loss.item())
         if batch_idx % log_interval == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(inputs), len(train_loader.dataset),

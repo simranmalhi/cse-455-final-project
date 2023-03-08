@@ -5,7 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 print("loading data...")
+# trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transforms.ToTensor())
 train_data = [] # TODO
+# testset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transforms.ToTensor())
 test_data = [] # TODO
 print("done")
 print()
@@ -15,25 +17,36 @@ print("making model...")
 TRAIN_BATCH_SIZE = 256
 TEST_BATCH_SIZE = 256
 EPOCHS = 20
-LEARNING_RATE = 0.002
-WEIGHT_DECAY = 0.0005
+LEARNING_RATE = 0.002 # default: 0.01
+MOMENTUM = 0.9 # default: 0.9
+WEIGHT_DECAY = 0.0005 # default: 0.0
 PRINT_INTERVAL = 10
 m = n.ConvNet()
 print("done")
 print()
 
 print("training...")
+# TODO: use Adam or optim.SGD?
 optimizer = optim.Adam(m.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
+# optimizer = optim.SGD(m.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY, momentum=MOMENTUM)
 
+# TODO: why is shuffle false for train_loader
+# TODO: set num_workers?
 train_loader = torch.utils.data.DataLoader(train_data, batch_size=TRAIN_BATCH_SIZE, shuffle=False)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=TEST_BATCH_SIZE, shuffle=False)
 train_losses, train_accuracies, test_losses, test_accuracies = [], [], [], []
+print("train_loader: " + train_loader.__dict__)
+
+# TODO: GPU: use GPU if available(?), uncomment on Colab
+# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# m.to(device)
+device = 0
 
 try:
     for epoch in range(1, EPOCHS + 1):
-        train_loss = n.train(m, optimizer, train_loader, epoch, PRINT_INTERVAL)
+        train_loss = n.train(m, optimizer, train_loader, epoch, PRINT_INTERVAL, device)
         test_loss, test_accuracy = n.test(m, test_loader)
-        train_accuracy = n.train_acc(m. train_loader)
+        train_accuracy = n.train_acc(m, train_loader)
         train_losses.append((epoch, train_loss))
         train_accuracies.append((epoch, train_accuracy))
         test_losses.append((epoch, test_loss))
