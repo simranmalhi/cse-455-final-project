@@ -13,7 +13,7 @@ from torch.utils.data import Dataset
 from torchvision import datasets
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print(device)
+print("device: ", device)
 
 import os
 import pandas as pd
@@ -48,9 +48,13 @@ def get_ASL_data(augmentation=0):
       transforms.ToTensor(),
     ])
   else:
-    transform_train = transforms.ToTensor()
+    transform_train = transforms.Compose([
+      transforms.ToPILImage(), # fixes "TypeError: pic should be PIL Image or ndarray. Got <class 'torch.Tensor'>"
+      transforms.ToTensor(),
+    ])
 
   transform_test = transforms.Compose([
+    transforms.ToPILImage(),
     transforms.ToTensor(),
   ])
 
@@ -59,16 +63,16 @@ def get_ASL_data(augmentation=0):
     img_dir="Kaggle/asl_alphabet_train/",
     transform=transform_train
   )
-  trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True,
-                                            num_workers=2)
+  # trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
+  trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True)
 
   testset = ASLDataset(
     annotations_file = "Kaggle/asl_alphabet_test/test_labels.csv",
     img_dir="Kaggle/asl_alphabet_test/asl_alphabet_test/",
     transform=transform_test
   )
-  testloader = torch.utils.data.DataLoader(testset, batch_size=128, shuffle=False,
-                                          num_workers=2)
+  # testloader = torch.utils.data.DataLoader(testset, batch_size=128, shuffle=False, num_workers=2)
+  testloader = torch.utils.data.DataLoader(testset, batch_size=128, shuffle=False)
   classes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'
   , 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
   , 'delete', 'nothing', 'space']

@@ -13,7 +13,6 @@ print("done")
 print()
 
 print("making model...")
-# TODO
 TRAIN_BATCH_SIZE = 128
 TEST_BATCH_SIZE = 128
 EPOCHS = 20
@@ -40,9 +39,8 @@ train_losses, train_accuracies, test_losses, test_accuracies = [], [], [], []
 print("train_loader: ", train_loader.__dict__)
 
 # TODO: GPU: use GPU if available(?), uncomment on Colab
-# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-# m.to(device)
-device = 0
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+m.to(device)
 
 try:
     for epoch in range(1, EPOCHS + 1):

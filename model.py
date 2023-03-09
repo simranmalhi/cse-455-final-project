@@ -54,8 +54,8 @@ class ConvNet(nn.Module):
 def train(model, optimizer, train_loader, epoch, log_interval, device):
     model.train()
     losses = []
+    # for batch_idx, batch in enumerate(tqdm.tqdm(train_loader)):
     for batch_idx, batch in enumerate(train_loader, 0):
-        #for batch_idx, batch in enumerate(tqdm.tqdm(train_loader)):
         # get the inputs; data is a list of [inputs, labels]
         inputs, labels = batch[0], batch[1]
         # TODO: GPU
