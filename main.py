@@ -1,21 +1,21 @@
 import torch
 import model as n
+import data_parsing as dp
 import torch.optim as optim
 import numpy as np
 import matplotlib.pyplot as plt
 
 print("loading data...")
-# trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transforms.ToTensor())
-train_data = [] # TODO
-# testset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transforms.ToTensor())
-test_data = [] # TODO
+# train_data = []
+# test_data = []
+# data loading is done in data_parsing.py
 print("done")
 print()
 
 print("making model...")
 # TODO
-TRAIN_BATCH_SIZE = 256
-TEST_BATCH_SIZE = 256
+TRAIN_BATCH_SIZE = 128
+TEST_BATCH_SIZE = 128
 EPOCHS = 20
 LEARNING_RATE = 0.002 # default: 0.01
 MOMENTUM = 0.9 # default: 0.9
@@ -32,10 +32,12 @@ optimizer = optim.Adam(m.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DEC
 
 # TODO: why is shuffle false for train_loader
 # TODO: set num_workers?
-train_loader = torch.utils.data.DataLoader(train_data, batch_size=TRAIN_BATCH_SIZE, shuffle=False)
-test_loader = torch.utils.data.DataLoader(test_data, batch_size=TEST_BATCH_SIZE, shuffle=False)
+# train_loader = torch.utils.data.DataLoader(train_data, batch_size=TRAIN_BATCH_SIZE, shuffle=False)
+# test_loader = torch.utils.data.DataLoader(test_data, batch_size=TEST_BATCH_SIZE, shuffle=False)
+train_loader = dp.data['train']
+test_loader = dp.data['test']
 train_losses, train_accuracies, test_losses, test_accuracies = [], [], [], []
-print("train_loader: " + train_loader.__dict__)
+print("train_loader: ", train_loader.__dict__)
 
 # TODO: GPU: use GPU if available(?), uncomment on Colab
 # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

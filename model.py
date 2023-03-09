@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as f
 import numpy as np
-import tqdm
+#import tqdm
 
 class ConvNet(nn.Module):
     def __init__(self):
@@ -11,17 +11,19 @@ class ConvNet(nn.Module):
 
         # TODO
         RGB = 3 # rgb channel count
-        LETTER_OUTPUT = 26 # output 26 letters
-        IMAGE_SIZE = 28 # pixel width of image
+        LETTER_OUTPUT = 29 # output 26 letters + 3 other things
+        IMAGE_SIZE = 200 # pixel width of image
         filter_size = 5
         c1_out_size = 6
         c2_out_size = 12
 
         # 3 channel input, 6 channel output, applies 5x5 filters
         self.c1 = nn.Conv2d(RGB, c1_out_size, filter_size)
-        self.bn1 = nn.BatchNorm2d()
+        # TODO: uncomment
+        # self.bn1 = nn.BatchNorm2d()
         self.c2 = nn.Conv2d(c1_out_size, c2_out_size, filter_size)
-        self.bn2 = nn.BatchNorm2d()
+        # TODO: uncomment
+        # self.bn2 = nn.BatchNorm2d()
 
         ## we can do the math or just run and see what size it needs to be
         new_image_size = IMAGE_SIZE-(2*(filter_size-1))
@@ -30,10 +32,10 @@ class ConvNet(nn.Module):
     def forward(self, x):
         # go through layers
         x = self.c1(x)
-        x = self.bn1(x)
+        # x = self.bn1(x) # TODO: uncomment
         x = f.relu(x)
         x = self.c2(x)
-        x = self.bn2(x)
+        # x = self.bn2(x) # TODO: uncomment
         x = f.relu(x)
 
         # return prediction
@@ -52,7 +54,8 @@ class ConvNet(nn.Module):
 def train(model, optimizer, train_loader, epoch, log_interval, device):
     model.train()
     losses = []
-    for batch_idx, batch in enumerate(tqdm.tqdm(train_loader)):
+    for batch_idx, batch in enumerate(train_loader, 0):
+        #for batch_idx, batch in enumerate(tqdm.tqdm(train_loader)):
         # get the inputs; data is a list of [inputs, labels]
         inputs, labels = batch[0], batch[1]
         # TODO: GPU

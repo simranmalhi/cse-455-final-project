@@ -38,7 +38,7 @@ class ASLDataset(Dataset):
         if self.target_transform:
             label = self.target_transform(label)
         return image, label
-    
+
 def get_ASL_data(augmentation=0):
   # Data augmentation transformations. Not for Testing!
   if augmentation:
@@ -47,7 +47,7 @@ def get_ASL_data(augmentation=0):
       transforms.RandomHorizontalFlip(),    # 50% of time flip image along y-axis
       transforms.ToTensor(),
     ])
-  else: 
+  else:
     transform_train = transforms.ToTensor()
 
   transform_test = transforms.Compose([
@@ -55,18 +55,18 @@ def get_ASL_data(augmentation=0):
   ])
 
   trainset = ASLDataset(
-    annotations_file = "/Kaggle/asl_alphabet_train/training_labels.csv",
-    img_dir="/Kaggle/asl_alphabet_train/",
+    annotations_file = "Kaggle/asl_alphabet_train/training_labels.csv",
+    img_dir="Kaggle/asl_alphabet_train/",
     transform=transform_train
-)
+  )
   trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True,
                                             num_workers=2)
 
   testset = ASLDataset(
-    annotations_file = "/Kaggle/asl_alphabet_test/test_labels.csv",
-    img_dir="/Kaggle/asl_alphabet_test/asl_alphabet_test/",
+    annotations_file = "Kaggle/asl_alphabet_test/test_labels.csv",
+    img_dir="Kaggle/asl_alphabet_test/asl_alphabet_test/",
     transform=transform_test
-)
+  )
   testloader = torch.utils.data.DataLoader(testset, batch_size=128, shuffle=False,
                                           num_workers=2)
   classes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'
