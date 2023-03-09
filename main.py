@@ -36,7 +36,7 @@ optimizer = optim.Adam(m.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DEC
 train_loader = dp.data['train']
 test_loader = dp.data['test']
 train_losses, train_accuracies, test_losses, test_accuracies = [], [], [], []
-print("train_loader: ", train_loader.__dict__)
+# print("train_loader: ", train_loader.__dict__)
 
 # TODO: GPU: use GPU if available(?), uncomment on Colab
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

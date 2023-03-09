@@ -26,8 +26,8 @@ class ConvNet(nn.Module):
         # self.bn2 = nn.BatchNorm2d()
 
         ## we can do the math or just run and see what size it needs to be
-        new_image_size = IMAGE_SIZE-(2*(filter_size-1))
-        self.output = nn.Linear(RGB*new_image_size*new_image_size, LETTER_OUTPUT)
+        # new_image_size = IMAGE_SIZE-(2*(filter_size-1))
+        self.output = nn.Linear(442368, LETTER_OUTPUT)
 
     def forward(self, x):
         # go through layers
@@ -46,8 +46,10 @@ class ConvNet(nn.Module):
     def inference(self, x):
         return self.forward(x) # gets and returns prediction
 
-    def loss(self, predictions, labels):
-        return nn.CrossEntropyLoss(predictions, labels, reduction='mean')
+    def loss(self):
+        return nn.CrossEntropyLoss()
+    # def loss(self, predictions, labels):
+        # return nn.CrossEntropyLoss(predictions, labels, reduction='mean')
 
 
 # returns mean loss for single epoch
@@ -67,7 +69,8 @@ def train(model, optimizer, train_loader, epoch, log_interval, device):
         output = model(inputs)
 
         # calculate losses
-        loss = model.loss(output, labels)
+        # loss = model.loss(output, labels)
+        loss = model.loss()(output, labels)
 
         # backward propagate
         loss.backward()
