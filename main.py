@@ -6,9 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 print("loading data...")
-# train_data = []
-# test_data = []
-# data loading is done in data_parsing.py
+train_loader = dp.data['train']
+test_loader = dp.data['test']
 print("done")
 print()
 
@@ -33,10 +32,7 @@ optimizer = optim.Adam(m.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DEC
 # TODO: set num_workers?
 # train_loader = torch.utils.data.DataLoader(train_data, batch_size=TRAIN_BATCH_SIZE, shuffle=False)
 # test_loader = torch.utils.data.DataLoader(test_data, batch_size=TEST_BATCH_SIZE, shuffle=False)
-train_loader = dp.data['train']
-test_loader = dp.data['test']
 train_losses, train_accuracies, test_losses, test_accuracies = [], [], [], []
-# print("train_loader: ", train_loader.__dict__)
 
 # TODO: GPU: use GPU if available(?), uncomment on Colab
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
