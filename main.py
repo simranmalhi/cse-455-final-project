@@ -25,8 +25,8 @@ print()
 
 print("training...")
 # TODO: use Adam or optim.SGD?
-optimizer = optim.Adam(m.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
-# optimizer = optim.SGD(m.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY, momentum=MOMENTUM)
+# optimizer = optim.Adam(m.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM, weight_decay=WEIGHT_DECAY)
+optimizer = optim.SGD(m.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY, momentum=MOMENTUM)
 
 # TODO: why is shuffle false for train_loader
 # TODO: set num_workers?
