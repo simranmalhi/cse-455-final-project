@@ -14,10 +14,10 @@ print()
 print("making model...")
 TRAIN_BATCH_SIZE = 128
 TEST_BATCH_SIZE = 128
-EPOCHS = 20
+EPOCHS = 10
 LEARNING_RATE = 0.002 # default: 0.01
 MOMENTUM = 0.9 # default: 0.9
-WEIGHT_DECAY = 0.0005 # default: 0.0
+WEIGHT_DECAY = 0.005 # default: 0.0
 PRINT_INTERVAL = 10
 m = n.ConvNet()
 print("done")

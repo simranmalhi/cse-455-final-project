@@ -19,26 +19,44 @@ class ConvNet(nn.Module):
 
         # 3 channel input, 6 channel output, applies 5x5 filters
         self.c1 = nn.Conv2d(RGB, 6, filter_size)
-        self.bn1 = nn.BatchNorm2d(6)
+        # self.bn1 = nn.BatchNorm2d(6)
+
         self.c2 = nn.Conv2d(6, 12, filter_size)
-        self.bn2 = nn.BatchNorm2d(12)
+        # self.bn2 = nn.BatchNorm2d(12)
+
         self.c3 = nn.Conv2d(12, 24, filter_size)
-        self.bn3 = nn.BatchNorm2d(24)
+        # self.bn3 = nn.BatchNorm2d(24)
+
+        self.c4 = nn.Conv2d(24, 48, filter_size)
+        # self.bn4 = nn.BatchNorm2d(48)
+
+        self.c5 = nn.Conv2d(48, 64, filter_size)
+        # self.bn4 = nn.BatchNorm2d(64)
 
         ## we can do the math or just run and see what size it needs to be
-        # new_image_size = IMAGE_SIZE-(2*(filter_size-1))
-        self.output = nn.Linear(442368, LETTER_OUTPUT)
+        # new_image_size = IMAGE_SIZE-(2*(filter_size-1)) 
+        ## 442368
+        self.output = nn.Linear(2073600, LETTER_OUTPUT)
 
     def forward(self, x):
         # go through layers
         x = self.c1(x)
-        x = self.bn1(x)
         x = f.relu(x)
+        # x = self.bn1(x)
+        
         x = self.c2(x)
-        x = self.bn2(x)
         x = f.relu(x)
+        # x = self.bn2(x)
+        
         x = self.c3(x)
-        x = self.bn3(x)
+        x = f.relu(x)
+        # x = self.bn3(x)
+
+        x = self.c4(x)
+        x = f.relu(x)
+        # x = self.bn3(x)
+
+        x = self.c5(x)
         x = f.relu(x)
 
         # return prediction
