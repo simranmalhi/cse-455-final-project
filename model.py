@@ -14,29 +14,49 @@ class ConvNet(nn.Module):
         LETTER_OUTPUT = 29 # output 26 letters + 3 other things
         IMAGE_SIZE = 200 # pixel width of image
         filter_size = 5
-        c1_out_size = 6
-        c2_out_size = 12
+        # c1_out_size = 6
+        # c2_out_size = 12
 
         # 3 channel input, 6 channel output, applies 5x5 filters
-        self.c1 = nn.Conv2d(RGB, c1_out_size, filter_size)
-        # TODO: uncomment
-        # self.bn1 = nn.BatchNorm2d()
-        self.c2 = nn.Conv2d(c1_out_size, c2_out_size, filter_size)
-        # TODO: uncomment
-        # self.bn2 = nn.BatchNorm2d()
+        self.c1 = nn.Conv2d(RGB, 6, filter_size)
+        # self.bn1 = nn.BatchNorm2d(6)
+
+        self.c2 = nn.Conv2d(6, 12, filter_size)
+        # self.bn2 = nn.BatchNorm2d(12)
+
+        # self.c3 = nn.Conv2d(12, 24, filter_size)
+        # self.bn3 = nn.BatchNorm2d(24)
+
+        # self.c4 = nn.Conv2d(24, 48, filter_size)
+        # self.bn4 = nn.BatchNorm2d(48)
+
+        # self.c5 = nn.Conv2d(48, 64, filter_size)
+        # self.bn4 = nn.BatchNorm2d(64)
 
         ## we can do the math or just run and see what size it needs to be
         # new_image_size = IMAGE_SIZE-(2*(filter_size-1))
-        # self.output = nn.Linear(442368, LETTER_OUTPUT)
-        self.output = nn.Linear(230496, LETTER_OUTPUT)
+        ## 442368
+        self.output = nn.Linear(442368, LETTER_OUTPUT)
 
     def forward(self, x):
         # go through layers
         x = self.c1(x)
-        # # x = self.bn1(x) # TODO: uncomment
+        x = f.relu(x)
+        # x = self.bn1(x)
+
+        x = self.c2(x)
+        x = f.relu(x)
+        # x = self.bn2(x)
+
+        # x = self.c3(x)
         # x = f.relu(x)
-        # x = self.c2(x)
-        # # x = self.bn2(x) # TODO: uncomment
+        # # x = self.bn3(x)
+
+        # x = self.c4(x)
+        # x = f.relu(x)
+        # # x = self.bn3(x)
+
+        # x = self.c5(x)
         # x = f.relu(x)
 
         # return prediction
@@ -70,8 +90,8 @@ def train(model, optimizer, train_loader, epoch, log_interval, device):
         output = model(inputs)
 
         # calculate losses
-        # loss = model.loss(output, labels)
         loss = model.loss(output, labels)
+        # loss = model.loss()(output, labels)
 
         # backward propagate
         loss.backward()
@@ -95,8 +115,7 @@ def test(model, test_loader):
     total = 0
 
     with torch.no_grad():
-        for batch_idx, batch in enumerate(test_loader):
-            inputs, labels = batch[0], batch[1]
+        for batch_idx, (inputs, labels) in enumerate(test_loader):
             # TODO: GPU
             # inputs, labels = batch[0].to(device), batch[1].to(device)
 
@@ -109,11 +128,11 @@ def test(model, test_loader):
             num_correct = (predicted == labels).sum().item()
             correct += num_correct
             total += labels.size(0)
-            break # TODO: REMOVE
+
     test_loss /= len(test_loader)
     test_accuracy = 100. * correct / total
 
-    print('\nTest set: Average loss: {:.4f}, Accuracy: ({:.0f}%)\n'.format(
+    print('\nTest set: Average loss: {:.4f}, Accuracy: {:.0f}%\n'.format(
         test_loss, test_accuracy))
     return test_loss, test_accuracy
 
