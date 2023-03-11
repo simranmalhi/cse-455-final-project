@@ -12,8 +12,8 @@ print("done")
 print()
 
 print("making model...")
-TRAIN_BATCH_SIZE = dp.BATCH_SIZE
-TEST_BATCH_SIZE = dp.BATCH_SIZE
+TRAIN_BATCH_SIZE = 128
+TEST_BATCH_SIZE = 128
 EPOCHS = 10
 LEARNING_RATE = 0.002 # default: 0.01
 MOMENTUM = 0.9 # default: 0.9
@@ -41,8 +41,8 @@ m.to(device)
 try:
     for epoch in range(1, EPOCHS + 1):
         train_loss = n.train(m, optimizer, train_loader, epoch, PRINT_INTERVAL, device)
-        test_loss, test_accuracy = n.test(m, test_loader)
-        train_accuracy = n.train_acc(m, train_loader)
+        test_loss, test_accuracy = n.test(m, test_loader, device)
+        train_accuracy = n.train_acc(m, train_loader, device)
         train_losses.append((epoch, train_loss))
         train_accuracies.append((epoch, train_accuracy))
         test_losses.append((epoch, test_loss))
