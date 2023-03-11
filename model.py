@@ -34,7 +34,7 @@ class ConvNet(nn.Module):
         # self.bn4 = nn.BatchNorm2d(64)
 
         ## we can do the math or just run and see what size it needs to be
-        # new_image_size = IMAGE_SIZE-(2*(filter_size-1))
+        # new_image_size = IMAGE_SIZE-(2*(filter_size-1)) 
         ## 442368
         self.output = nn.Linear(442368, LETTER_OUTPUT)
 
@@ -43,11 +43,11 @@ class ConvNet(nn.Module):
         x = self.c1(x)
         x = f.relu(x)
         # x = self.bn1(x)
-
+        
         x = self.c2(x)
         x = f.relu(x)
         # x = self.bn2(x)
-
+        
         # x = self.c3(x)
         # x = f.relu(x)
         # # x = self.bn3(x)
@@ -80,9 +80,9 @@ def train(model, optimizer, train_loader, epoch, log_interval, device):
     # for batch_idx, batch in enumerate(tqdm.tqdm(train_loader)):
     for batch_idx, batch in enumerate(train_loader, 0):
         # get the inputs; data is a list of [inputs, labels]
-        inputs, labels = batch[0], batch[1]
+        #inputs, labels = batch[0], batch[1]
         # TODO: GPU
-        # inputs, labels = batch[0].to(device), batch[1].to(device)
+        inputs, labels = batch[0].to(device), batch[1].to(device)
 
         # zero parameter gradients
         optimizer.zero_grad()
@@ -105,10 +105,9 @@ def train(model, optimizer, train_loader, epoch, log_interval, device):
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(inputs), len(train_loader.dataset),
                 100. * batch_idx / len(train_loader), loss.item()))
-        break # TODO remove break to train
     return np.mean(losses)
 
-def test(model, test_loader):
+def test(model, test_loader, device):
     model.eval()
     test_loss = 0
     correct = 0
@@ -117,7 +116,7 @@ def test(model, test_loader):
     with torch.no_grad():
         for batch_idx, (inputs, labels) in enumerate(test_loader):
             # TODO: GPU
-            # inputs, labels = batch[0].to(device), batch[1].to(device)
+            inputs, labels = inputs.to(device), labels.to(device)
 
             # get prediction
             output = model(inputs)
@@ -136,14 +135,14 @@ def test(model, test_loader):
         test_loss, test_accuracy))
     return test_loss, test_accuracy
 
-def train_acc(model, train_dataloader):
+def train_acc(model, train_dataloader, device):
     correct = 0
     total = 0
     with torch.no_grad():
         for batch_idx, (inputs, labels) in enumerate(train_dataloader):
+            inputs, labels = inputs.to(device), labels.to(device)
             outputs = model(inputs)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
-            break # TODO: remove
     return correct / total
