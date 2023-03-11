@@ -24,19 +24,19 @@ class ConvNet(nn.Module):
         self.c2 = nn.Conv2d(6, 12, filter_size)
         # self.bn2 = nn.BatchNorm2d(12)
 
-        self.c3 = nn.Conv2d(12, 24, filter_size)
+        # self.c3 = nn.Conv2d(12, 24, filter_size)
         # self.bn3 = nn.BatchNorm2d(24)
 
-        self.c4 = nn.Conv2d(24, 48, filter_size)
+        # self.c4 = nn.Conv2d(24, 48, filter_size)
         # self.bn4 = nn.BatchNorm2d(48)
 
-        self.c5 = nn.Conv2d(48, 64, filter_size)
+        # self.c5 = nn.Conv2d(48, 64, filter_size)
         # self.bn4 = nn.BatchNorm2d(64)
 
         ## we can do the math or just run and see what size it needs to be
         # new_image_size = IMAGE_SIZE-(2*(filter_size-1)) 
         ## 442368
-        self.output = nn.Linear(2073600, LETTER_OUTPUT)
+        self.output = nn.Linear(442368, LETTER_OUTPUT)
 
     def forward(self, x):
         # go through layers
@@ -48,16 +48,16 @@ class ConvNet(nn.Module):
         x = f.relu(x)
         # x = self.bn2(x)
         
-        x = self.c3(x)
-        x = f.relu(x)
-        # x = self.bn3(x)
+        # x = self.c3(x)
+        # x = f.relu(x)
+        # # x = self.bn3(x)
 
-        x = self.c4(x)
-        x = f.relu(x)
-        # x = self.bn3(x)
+        # x = self.c4(x)
+        # x = f.relu(x)
+        # # x = self.bn3(x)
 
-        x = self.c5(x)
-        x = f.relu(x)
+        # x = self.c5(x)
+        # x = f.relu(x)
 
         # return prediction
         x = torch.flatten(x, 1)
@@ -67,10 +67,10 @@ class ConvNet(nn.Module):
     def inference(self, x):
         return self.forward(x) # gets and returns prediction
 
-    def loss(self):
-        return nn.CrossEntropyLoss()
-    # def loss(self, predictions, labels):
-        # return nn.CrossEntropyLoss(predictions, labels, reduction='mean')
+    # def loss(self):
+    #     return nn.CrossEntropyLoss()
+    def loss(self, predictions, labels):
+        return nn.CrossEntropyLoss()(predictions, labels)
 
 
 # returns mean loss for single epoch
@@ -90,8 +90,8 @@ def train(model, optimizer, train_loader, epoch, log_interval, device):
         output = model(inputs)
 
         # calculate losses
-        # loss = model.loss(output, labels)
-        loss = model.loss()(output, labels)
+        loss = model.loss(output, labels)
+        # loss = model.loss()(output, labels)
 
         # backward propagate
         loss.backward()
@@ -111,6 +111,7 @@ def test(model, test_loader):
     model.eval()
     test_loss = 0
     correct = 0
+    total = 0
 
     with torch.no_grad():
         for batch_idx, (inputs, labels) in enumerate(test_loader):
@@ -125,13 +126,13 @@ def test(model, test_loader):
             test_loss += model.loss(output, labels).item()
             num_correct = (predicted == labels).sum().item()
             correct += num_correct
+            total += labels.size(0)
 
     test_loss /= len(test_loader)
-    test_accuracy = 100. * correct / (len(test_loader.dataset) * test_loader.dataset.sequence_length)
+    test_accuracy = 100. * correct / total
 
-    print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-        test_loss, correct, len(test_loader.dataset) * test_loader.dataset.sequence_length,
-        100. * correct / (len(test_loader.dataset) * test_loader.dataset.sequence_length)))
+    print('\nTest set: Average loss: {:.4f}, Accuracy: {:.0f}%\n'.format(
+        test_loss, test_accuracy))
     return test_loss, test_accuracy
 
 def train_acc(model, train_dataloader):

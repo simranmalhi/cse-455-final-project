@@ -68,7 +68,7 @@ def get_ASL_data(augmentation=0):
 
   testset = ASLDataset(
     annotations_file = "Kaggle/asl_alphabet_test/test_labels.csv",
-    img_dir="Kaggle/asl_alphabet_test/asl_alphabet_test/",
+    img_dir="Kaggle/asl_alphabet_test/",
     transform=transform_test
   )
   # testloader = torch.utils.data.DataLoader(testset, batch_size=128, shuffle=False, num_workers=2)
