@@ -19,6 +19,8 @@ import os
 import pandas as pd
 from torchvision.io import read_image
 
+BATCH_SIZE = 128
+
 class ASLDataset(Dataset):
     def __init__(self, annotations_file, img_dir, transform=None, target_transform=None):
         self.img_labels = pd.read_csv(annotations_file)
@@ -63,16 +65,16 @@ def get_ASL_data(augmentation=0):
     img_dir="Kaggle/asl_alphabet_train/",
     transform=transform_train
   )
-  # trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
-  trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True)
+  # trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
+  trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True)
 
   testset = ASLDataset(
     annotations_file = "Kaggle/asl_alphabet_test/test_labels.csv",
-    img_dir="Kaggle/asl_alphabet_test/asl_alphabet_test/",
+    img_dir="Kaggle/asl_alphabet_test/",
     transform=transform_test
   )
-  # testloader = torch.utils.data.DataLoader(testset, batch_size=128, shuffle=False, num_workers=2)
-  testloader = torch.utils.data.DataLoader(testset, batch_size=128, shuffle=False)
+  # testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE, shuffle=False, num_workers=2)
+  testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE, shuffle=False)
   classes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'
   , 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
   , 'delete', 'nothing', 'space']

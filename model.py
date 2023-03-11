@@ -27,16 +27,17 @@ class ConvNet(nn.Module):
 
         ## we can do the math or just run and see what size it needs to be
         # new_image_size = IMAGE_SIZE-(2*(filter_size-1))
-        self.output = nn.Linear(442368, LETTER_OUTPUT)
+        # self.output = nn.Linear(442368, LETTER_OUTPUT)
+        self.output = nn.Linear(230496, LETTER_OUTPUT)
 
     def forward(self, x):
         # go through layers
         x = self.c1(x)
-        # x = self.bn1(x) # TODO: uncomment
-        x = f.relu(x)
-        x = self.c2(x)
-        # x = self.bn2(x) # TODO: uncomment
-        x = f.relu(x)
+        # # x = self.bn1(x) # TODO: uncomment
+        # x = f.relu(x)
+        # x = self.c2(x)
+        # # x = self.bn2(x) # TODO: uncomment
+        # x = f.relu(x)
 
         # return prediction
         x = torch.flatten(x, 1)
@@ -46,10 +47,10 @@ class ConvNet(nn.Module):
     def inference(self, x):
         return self.forward(x) # gets and returns prediction
 
-    def loss(self):
-        return nn.CrossEntropyLoss()
-    # def loss(self, predictions, labels):
-        # return nn.CrossEntropyLoss(predictions, labels, reduction='mean')
+    # def loss(self):
+    #     return nn.CrossEntropyLoss()
+    def loss(self, predictions, labels):
+        return nn.CrossEntropyLoss()(predictions, labels)
 
 
 # returns mean loss for single epoch
@@ -70,7 +71,7 @@ def train(model, optimizer, train_loader, epoch, log_interval, device):
 
         # calculate losses
         # loss = model.loss(output, labels)
-        loss = model.loss()(output, labels)
+        loss = model.loss(output, labels)
 
         # backward propagate
         loss.backward()
@@ -84,12 +85,14 @@ def train(model, optimizer, train_loader, epoch, log_interval, device):
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(inputs), len(train_loader.dataset),
                 100. * batch_idx / len(train_loader), loss.item()))
+        break # TODO remove break to train
     return np.mean(losses)
 
 def test(model, test_loader):
     model.eval()
     test_loss = 0
     correct = 0
+    total = 0
 
     with torch.no_grad():
         for batch_idx, batch in enumerate(test_loader):
@@ -105,13 +108,13 @@ def test(model, test_loader):
             test_loss += model.loss(output, labels).item()
             num_correct = (predicted == labels).sum().item()
             correct += num_correct
-
+            total += labels.size(0)
+            break # TODO: REMOVE
     test_loss /= len(test_loader)
-    test_accuracy = 100. * correct / (len(test_loader.dataset) * test_loader.dataset.sequence_length)
+    test_accuracy = 100. * correct / total
 
-    print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-        test_loss, correct, len(test_loader.dataset) * test_loader.dataset.sequence_length,
-        100. * correct / (len(test_loader.dataset) * test_loader.dataset.sequence_length)))
+    print('\nTest set: Average loss: {:.4f}, Accuracy: ({:.0f}%)\n'.format(
+        test_loss, test_accuracy))
     return test_loss, test_accuracy
 
 def train_acc(model, train_dataloader):
@@ -123,4 +126,5 @@ def train_acc(model, train_dataloader):
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
+            break # TODO: remove
     return correct / total
