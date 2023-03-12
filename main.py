@@ -62,28 +62,34 @@ finally:
     plt.xlabel('Epoch')
     plt.ylabel('Training Loss')
     plt.title('Training Loss vs Epoch')
-    plt.show()
+    plt.savefig('train_loss.png')
+    plt.clf()
+
 
     ep, val = zip(*train_accuracies)
     plt.plot(val)
     plt.xlabel('Epoch')
     plt.ylabel('Training Accuracy')
     plt.title('Training Accuracies vs Epoch')
-    plt.show()
+    plt.savefig('train_acc.png')
+    plt.clf()
 
     ep, val = zip(*test_losses)
     plt.plot(val)
     plt.xlabel('Epoch')
     plt.ylabel('Testing Loss')
     plt.title('Testing Loss vs Epoch')
-    plt.show()
+    plt.savefig('test_loss.png')
+    plt.clf()
+
 
     ep, val = zip(*test_accuracies)
     plt.plot(val)
     plt.xlabel('Epoch')
     plt.ylabel('Testing Accuracy')
     plt.title('Testing Accuracies vs Epoch')
-    plt.show()
+    plt.savefig('test_acc.png')
+    plt.close()
 
     print("done")
     print()
