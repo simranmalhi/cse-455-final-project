@@ -24,19 +24,18 @@ class ConvNet(nn.Module):
         self.c2 = nn.Conv2d(6, 12, filter_size)
         # self.bn2 = nn.BatchNorm2d(12)
 
-        # self.c3 = nn.Conv2d(12, 24, filter_size)
+        self.c3 = nn.Conv2d(12, 24, filter_size)
         # self.bn3 = nn.BatchNorm2d(24)
 
-        # self.c4 = nn.Conv2d(24, 48, filter_size)
+        self.c4 = nn.Conv2d(24, 48, filter_size)
         # self.bn4 = nn.BatchNorm2d(48)
 
-        # self.c5 = nn.Conv2d(48, 64, filter_size)
+        self.c5 = nn.Conv2d(48, 64, filter_size)
         # self.bn4 = nn.BatchNorm2d(64)
 
         ## we can do the math or just run and see what size it needs to be
         # new_image_size = IMAGE_SIZE-(2*(filter_size-1))
-        ## 442368
-        self.output = nn.Linear(442368, LETTER_OUTPUT)
+        self.output = nn.Linear(2073600, LETTER_OUTPUT)
 
     def forward(self, x):
         # go through layers
@@ -48,16 +47,16 @@ class ConvNet(nn.Module):
         x = f.relu(x)
         # x = self.bn2(x)
 
-        # x = self.c3(x)
-        # x = f.relu(x)
+        x = self.c3(x)
+        x = f.relu(x)
         # # x = self.bn3(x)
 
-        # x = self.c4(x)
-        # x = f.relu(x)
+        x = self.c4(x)
+        x = f.relu(x)
         # # x = self.bn3(x)
 
-        # x = self.c5(x)
-        # x = f.relu(x)
+        x = self.c5(x)
+        x = f.relu(x)
 
         # return prediction
         x = torch.flatten(x, 1)
@@ -145,4 +144,4 @@ def train_acc(model, train_dataloader, device):
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
-    return correct / total
+    return 100. * correct / total

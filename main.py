@@ -14,7 +14,7 @@ print()
 print("making model...")
 TRAIN_BATCH_SIZE = dp.BATCH_SIZE
 TEST_BATCH_SIZE = dp.BATCH_SIZE
-EPOCHS = 1
+EPOCHS = 5
 LEARNING_RATE = 0.002 # default: 0.01
 MOMENTUM = 0.9 # default: 0.9
 WEIGHT_DECAY = 0.005 # default: 0.0
