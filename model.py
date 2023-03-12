@@ -34,7 +34,7 @@ class ConvNet(nn.Module):
         # self.bn4 = nn.BatchNorm2d(64)
 
         ## we can do the math or just run and see what size it needs to be
-        # new_image_size = IMAGE_SIZE-(2*(filter_size-1)) 
+        # new_image_size = IMAGE_SIZE-(2*(filter_size-1))
         ## 442368
         self.output = nn.Linear(442368, LETTER_OUTPUT)
 
@@ -43,11 +43,11 @@ class ConvNet(nn.Module):
         x = self.c1(x)
         x = f.relu(x)
         # x = self.bn1(x)
-        
+
         x = self.c2(x)
         x = f.relu(x)
         # x = self.bn2(x)
-        
+
         # x = self.c3(x)
         # x = f.relu(x)
         # # x = self.bn3(x)
