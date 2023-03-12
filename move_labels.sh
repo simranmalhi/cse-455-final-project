@@ -101,5 +101,17 @@
 
 # MANUALLY REMOVE THE ENTRY FOR DELETE 3001!!!!!!!!
 
+cd "Kaggle/asl_alphabet_test"
+# iterate each class
+for folder in *; do
+	if [ -d $folder ]; then
+        cd $folder;
+		rm *.Identifier
+        cd ..;
+	fi
+done
+
+
+
 
 
