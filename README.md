@@ -11,47 +11,28 @@ data_parsing.py = for loading data, processing data, and splitting it into train
 
 ## Abstract
 
-In this project, we analyze the Spotify song data of users in order to predict compatibility scores for users and songs, then use these predicted scores to generate song recommendations for the users. We use a Neural Collaborative Filtering (NCF) model to predict compatibility scores, then output the highest-scoring tracks for each user as recommendations. 
+In this project, we analyze a dataset provided by Kaggle in order to create a American Sign Language (ASL) Alphabet Translator, which can then be used to predict an ASL letter from a provided image. In order to analyze the provided dataset, we train a Convolutional Neural Network (CNN) model to predict the correct label for the input image, whether a letter from the English Alphabet, a space character, the delete character, or an empty character. We chose an CNN model because it automatically learns and detects the important features and parts of input on its own, which is desired for our ASL image classification system. 
 
-We chose an NCF model because it learns and predict user-item interactions based on past interactions, which is desired for our recommender system. However, our model was unsuccessful in its predictions: the predicted track scores converged at one value despite the wide variety in the actual scores, which resulted in the same ten songs getting recommended for each user, regardless of their listening habits and actual audio feature preferences. We suspect that this is because the model underfits our data due to the layers and parameters used. In the future, we plan to experiment with different numbers and kinds of hidden layers, different loss functions, and different learning rates and weight decays to see if we can improve our model's ability to learn the user and track features.
+####Model Results### TODO
+However, our model was unsuccessful in its predictions: the predicted track scores converged at one value despite the wide variety in the actual scores, which resulted in the same ten songs getting recommended for each user, regardless of their listening habits and actual audio feature preferences. We suspect that this is because the model underfits our data due to the layers and parameters used. In the future, we plan to experiment with different numbers and kinds of hidden layers, different loss functions, and different learning rates and weight decays to see if we can improve our model's ability to learn the user and track features.
 
 ---
 
 ## Problem
 
-Many Spotify users are hesitant to listen to unfamiliar songs, since they don’t know whether it will suit their interests/likes. Although most users enjoy listening to songs from a particular artist and may use the artist as a starting point for finding new songs to listen to, there are many artists who vary in style from song to song. Thus, listening to songs from followed artists is not enough of a guarantee that users will find a new song that they like.
+American sign language (ASL) is used by around 500,000 deaf people in the US and Canada, primarily by the deaf or hard of hearing (1). What makes ASL unique from other languages is that it is conveyed through video in the form of sequences of hand gestures, different from auditory or handwritten forms of communication. This offers a unique accessibility challenge for forms of media like broadcasted video, which may include captions based on speech detection for spoken language, but may not support captions for sign language.
+	
+Creating an ASL alphabet translator would help improve the accessibility of videos which display sign language, for audiences who do not understand sign language, bringing communities together through thoughtful technological innovation. From the detected transcription of signed gestures, we then use existing technologies to generate audio tracks or caption tracks to help the audience understand what is being signed. 
 
-As the number of songs on Spotify grows, it becomes increasingly difficult for users to quickly find songs that they would enjoy. Thus, for our project, we wanted to create a model to generate song recommendations for users based on their Spotify data (previously listened to songs, followed artists, etc) to streamline this process. 
+Stakeholders for our project include both those who use ASL, primarily deaf or hard of hearing individuals, since they would be able to communicate with a wider audience. For the Americans who can’t understand ASL, a significant majority, our project would help them connect with and understand a small but significant population of individuals who previously may have been unheard.
 
 ---
 
-## Related Work
+### Our Chosen Dataset: The Kaggle ASL Alphabet Dataset (featuting 29 different ASL Alphabet Characters)
 
-### Our Inspiration: Kaggle Recommendation Competition
-We came across a [Kaggle competition](https://www.kaggle.com/c/movielens-100k) that involved generating movie recommendations using the [MovieLens dataset](https://grouplens.org/datasets/movielens/). Some of the solutions that users in this competition came up with were Multi-Layer Perceptrons, Collaborative Filtering using Pearson Correlation, Matrix Factorization, and Bayesian Probabilistic Rankings.
+There are various public datasets that we could use in order to train and test our model. The main dataset we used is a collection of images of alphabets from American Sign Language, which was separated into 29 folders, each representing a character class. [ASL Alphabet Dataset](https://www.kaggle.com/datasets/grassknoted/asl-alphabet) In the dataset, there are 29 classes, of which 26 are for the letters A-Z and 3 classes for “space”, “delete” and “nothing”. While there are 29 images in this dataset for testing, we will also be testing with our own real-life images so we can have a better view of the usability of our model. We will ensure that the dataset split is 80% training data and 20% testing data.
 
-These ideas inspired us to create a Spotify song recommendation system using deep learning, specifically Neural Collaborative Filtering. We decided to build off of some of the techniques of matrix factorization and collaborative filtering in order to create a NCF.
-
-### Our Chosen Dataset: The Spotify Dataset (Users, Tracks, and Scores)
-
-The first dataset we used was a collection of Spotify data pulled from five user accounts using the [spotipy](https://spotipy.readthedocs.io/en/2.22.0/) library. 
-
-For each user, we retrieved their unique user id and the tracks they had interacted with (added to a playlist, saved, recently listened to, by a followed artist). For each of these tracks, we stored its unique track id, the track name, artist, certain audio features, and the different ways in which the user had interacted with it.
-
-We retrieved 9 audio features for each track:
-1. acousticness
-2. danceability
-3. energy
-4. instrumentalness
-5. liveness
-6. loudness
-7. speechiness
-8. valence
-9. tempo
-
-From the Spotify dataset, we created two additional datasets: one mapping each track to its audio features, and one mapping each user to their preferred audio features. In these datasets, the user and track ids were one-hot encoded and padded for consistent length.
-
-Then, using the users' preferred audio features and the track audio features, we generated compatibility scores for each unique user/track combination, representing how much a user would like a track. This dataset stored 19360 scores (3872 songs for each of 5 users).
+The initial dataset is split into a training and testing dataset. The initial training dataset contains 87,000 images with the resolution of 200x200 pixels, split into 29 character classes. The initial testing dataset contains 29 images, one for each character class. Because of the extremely small nature of the initial testing dataset, we modified the training and testing dataset so that the proportions of the training and testing datasets were more evenly distributed (80% training data and 20% testing data). The modified training dataset we created had 2400 train images per class with 69600 images overall. The modified testing dataset we created had 601 test images per class with 17428 images overall.
 
 ---
 
@@ -60,21 +41,17 @@ Then, using the users' preferred audio features and the track audio features, we
 ### Overview
 We approached this problem using the following steps:
 
-By running `create_spotify_dataset.py`:
+By running `data_parsing.py`:
 
-1. Retreiving Spotify data from various users and creating a dataset of users and the songs they have interacted with.
+1. Retrieving ASL Alphabet data and creating the training and testing dataset to train the model on.
 
 By running `main.py`:
 
-2. Pre-processing the data to generate compatibility scores for each user/track combination from `spotify_dataset.csv` through invoking `process_data.py`.
+2. Initializing the parameters (train and test batch sizes, epochs, learning rate, momentum, weight decay, and test accuracy/loss printing interval) and the Stochastic Gradient Descent (SGD) optimizer.
 
-3. Initializing the parameters (train and test batch sizes, feature size, epochs, learning rate, weight decay, and test accuracy/loss printing interval) and the Adam optimizer.
+3. Defining and training a model to learn the features of the 29 ASL character classes and predict the label of the test image through invoking `model.py`.
 
-4. Defining and training a model to learn the user's preferred audio features and predict a score for each user/track combination through invoking `network.py`.
-
-5. Generate 10 recommended songs for each user by using the highest predicted compatbility scores
-
-### Retrieving Spotify Data
+### Retrieving ASL Alphabet Data
 
 Retrieving data from Spotify was handled by the `create_spotify_dataset.py` script. 
 
@@ -346,4 +323,4 @@ Demo video can be found [here](https://github.com/deeptii-20/cse-490g1-final-pro
 
 ## Code
 
-Code for this project can be found [here](https://github.com/deeptii-20/cse-490g1-final-project).
+Code for this project can be found [here](https://github.com/simranmalhi/cse-455-final-project).
