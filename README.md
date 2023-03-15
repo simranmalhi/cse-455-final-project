@@ -30,9 +30,7 @@ Stakeholders for our project include both those who use ASL, primarily deaf or h
 
 ### Our Chosen Dataset: The Kaggle ASL Alphabet Dataset (featuting 29 different ASL Alphabet Characters)
 
-There are various public datasets that we could use in order to train and test our model. The main dataset we used is a collection of images of alphabets from American Sign Language, which was separated into 29 folders, each representing a character class. [ASL Alphabet Dataset](https://www.kaggle.com/datasets/grassknoted/asl-alphabet) In the dataset, there are 29 classes, of which 26 are for the letters A-Z and 3 classes for “space”, “delete” and “nothing”. While there are 29 images in this dataset for testing, we will also be testing with our own real-life images so we can have a better view of the usability of our model. We will ensure that the dataset split is 80% training data and 20% testing data.
-
-The initial dataset is split into a training and testing dataset. The initial training dataset contains 87,000 images with the resolution of 200x200 pixels, split into 29 character classes. The initial testing dataset contains 29 images, one for each character class. Because of the extremely small nature of the initial testing dataset, we modified the training and testing dataset so that the proportions of the training and testing datasets were more evenly distributed (80% training data and 20% testing data). The modified training dataset we created had 2400 train images per class with 69600 images overall. The modified testing dataset we created had 601 test images per class with 17428 images overall.
+There are various public datasets that we could use in order to train and test our model. The main dataset we used is a collection of images of alphabets from American Sign Language, which was separated into 29 folders, each representing a character class. [ASL Alphabet Dataset](https://www.kaggle.com/datasets/grassknoted/asl-alphabet) In the dataset, there are 29 classes, of which 26 are for the letters A-Z and 3 classes for “space”, “delete” and “nothing”. While there are 29 images in this dataset for testing, we also tested with our own real-life images so we can have a better view of the usability of our model. We also ensured that the dataset split is 80% training data and 20% testing data.
 
 ---
 
@@ -53,51 +51,21 @@ By running `main.py`:
 
 ### Retrieving ASL Alphabet Data
 
-Retrieving data from Spotify was handled by the `create_spotify_dataset.py` script. 
+In order to retrieve the appropriate data from Kaggle, we first downloaded the Kaggle dataset into the same folder as our code since our code was written based on the assumption that the ASL Alphabet Kaggle data is already downloaded. We then manipulated the initial dataset so it would be more ideal for our training and testing purposes. 
 
-This involves three major steps:
-
-1. Create a Spotify API client, prompting the current user to sign in
-
-2. Retrieve the current user's user id, then iterate through playlists, saved tracks, recently played tracks, and followed artists to add tracks to the dataset
-
-3. Write the dataset to a file (`spotify_dataset.csv`), appending it to the end of any existing data (not overwriting)
-
+The initial dataset is split into a training and testing dataset. The initial training dataset contains 87,000 images with the resolution of 200x200 pixels, split into 29 character classes. The initial testing dataset contains 29 images, one for each character class. Because of the extremely small nature of the initial testing dataset, we modified the training and testing dataset so that the proportions of the training and testing datasets were more evenly distributed (80% training data and 20% testing data). The modified training dataset we created had 2400 train images per class with 69600 images overall. The modified testing dataset we created had 601 test images per class with 17428 images overall. 
 
 ### Pre-Processing Data
 
-Processing Spotify data for training and testing our model was handled by the `process_data.py` script. 
+Processing the ASL Alphabet data for training and testing our model was handled by the `data_parsing.py` script. 
 
-This involves five major steps:
+This involves two major pieces, the `get_ASL_data` method, which creates the training and testing dataloaders, and the custom ASL Dataset we created for this model:
    
-   1. `process_user_data` reads from the overall Spotify dataset and calculates the user's preferred feature values by taking a weighted average of the features of each track in the dataset
-        - Reads the user_id and the 9 track audio features for each track that the user has listened to
-        - For each user, calculate the weighted average of each feature
-            - feature_weighted_avg = sum(feature_value(i) * feature_weight(i) for i in range(len(num_tracks))) / num_tracks`
-        - Returns a mapping of: {user_id: [feature_1_weighted_avg,...,feature_9_weighted_avg]}
+   1. `get_ASL_data` gets the ASL Alphabet data from the downloaded data folders and creates the two datasets and two dataloaders for use in training and testing of the model. It also creates a list of character classes for use in labeling and categorizing the input images. The method then returns the training dataloader, the testing dataloader, and the character class list for use in the main model training program.
    
-   2. `process_track_data` reads from the overall Spotify dataset and stores the feature values for each track 
-        - Reads the track_id and 9 track audio features
-        - Returns a mapping of: {track_id: [feature_1_value,...,feature_9_value]}
+   2. `ASLDataset` is a custom dataset we created in order to accomadate for our more unique dataloading method. Within this custom dataset, we included an init method, a length method, and a getitem method. Because our data was in the form of an image and a corresponding character label, we had to customize these three methods to save and return images and their corresponding labels.
 
-   3. `item_to_onehot` converts the user ids and track ids (stored as alphanumeric strings) into an array representation of 1s and 0s (a onehot encoding). This is done because neural networks can't process categorical data. Both user ids and track ids are padded to 30 characters during encoding, since this is the maximum allowed length for a Spotify user id. `onehot_to_item` does the reverse conversion at the very end of the program when we want to print out the string track_ids for the user to see the track recommendations
-        - `item_to_onehot`
-            - takes in a string user_id or track_id
-            - converts each character of the user_id into an array representation where the length of the array is the number of possible characters with a 1 at the index of the appropriate character and 0s elsewhere
-                - ex. when possible chars = [a, b, c], the array for 'a' = [1, 0, 0]
-            - merges the characters arrays into a 1d array
-                - ex. when possible chars = [a, b, c], the return arr for string "abc" is [1, 0, 0, 0, 1, 0, 0, 0, 1]
-            - pads the id to have 30 characters to ensure all encodings are of the same length by adding (30 - num_characters) arrays of zeros to the end of the 1d array before returning it
-                - ex. when the string is "abc" the padded array is [1, 0, 0, 0, 1, 0, 0, 0, 1, 0........0]
-        - `onehot_to_item`
-            - does the reverse of one_hot encoding: takes in the 1d array of 1s and 0s and returns the string id
-   
-   4. `get_scores` takes user feature preferences (output of `process_user_data`) and track features (output of `process_track_data`) and calculates a compatibility score for each user/track combination using a dot product of user_feature and track_feature. These scores are normalized between 0 - 1 and get added to a dataset along with the one-hot encoded user ids and track ids (outputs of `item_to_onehot`)
-   
-   5. `get_train_test_data` takes the dataset of scores (output of `get_scores`) and separates it into training and test data. The training data is generated by randomly selecting 80% of rows (user_encoding, track_encoding, score) for each user. The test data is the remaining 20% of the rows in the dataset.
-
-
-### Neural Network Model Definition
+### Neural Network Model Definition (TODO)
 
 We trained a Neural Collaborative Filtering model on the dataset in order to generate track scores for the users. We chose an NCF model because it learns and predict user-item interactions based on past interactions. The Spotify dataset is user-song interaction based, which is implicit feedback, which makes it easier to gather lots of data. NCFs are able to utilize this implicit feedback in the data in order to learn user song audio preferences in order to predict the likelihood of the user liking a particular track. Thus, this model seemed like a good deep learning solution for a Spotify song recommendation system. This network and the train and test methods are defined in `network.py`.
 
@@ -109,7 +77,7 @@ Finally, we then pass the predicted scores through a sigmoid function to ensure 
 
 For our loss function, we chose to use the MSE loss function because our problem is a regression problem and we are trying to minimize the difference between the predicted and actual scores.
 
-### Song Predictions
+### Song Predictions (TODO: Results)
 After the model has been trained and evaluated with the training and testing data, we print out the top ten song predictions per user using the following steps:
 
 1. Convert the user onehot and track onehot encodings back to their string id representations using `onehot_to_item`.
@@ -130,15 +98,19 @@ After the model has been trained and evaluated with the training and testing dat
 
 ### Experiments
 
-For our experiments, we experimented with changing our batch sizes, epochs, learning rate, and weight decay to improve our test accuracies. As a reminder, we gathered the user data for our experiments through running `create_spotify_dataset.py` for different Spotify users. We then ran our experiments by running `main.py`, which:
+For our experiments, we experimented with changing our epochs, learning rate, momentum, and weight decay to improve our test accuracies. As a reminder, we gathered the user data for our experiments by downloading the ASL Alphabet Kaggle Dataset and running `data_parsing.py` to organize the datasets into training and testing dataloaders. We then ran our experiments by running `main.py`, which:
 
-   1. Loaded and processed the training and testing data from `spotify_dataset.csv` through invoking `process_data.py`.
+   1. Loaded and processed the training and testing data from the dataloaders provided by `data_parsing.py`.
 
-   2. Initialized the parameters and the Adam optimizer
+   2. Created the Convolutional Neural Network Model by calling upon `model.py`
    
-   3. Created and trained the model through invoking `network.py`. When training, per epoch it prints out the test loss for each batch along with the average test loss and test accuracy.
+   3. Initialized the parameters and the SGD optimizer
+   
+   3. Trained the model through invoking methods from `model.py`, including `model.train`, `model.test`, and `model.train_acc`. When training, per epoch it prints out the training loss for each batch along with the average test loss and test accuracy.
 
-   4. Generated the top ten song recommendations per user by selecting the top ten songs with the highest scores predicted by the model
+   4. Plotted/Graphed 4 graphs based on training loss, training accuracy, testing loss, and testing accuracy of model
+
+TODO
 
 Our worst model had batch sizes of 512, 20 epochs, a learning rate of 0.1, and a weight decay of 0.0005. This had test accuracies that fluctuated dramatically between epochs, bouncing between test accuracies from around 26% to 73%.
 ![img1](https://github.com/deeptii-20/cse-490g1-final-project/blob/main/results/worst-test-acc.png)
@@ -155,13 +127,11 @@ We would have experimented more with different network architectures to find the
 
 ### Evaluation
 
-To evaluate the accuracy of the score predictions, we calculated the test accuracies for each epoch by subtracting the difference of each predicted and actual scores and counting the number of predicted values that had a difference in value less than 0.00000001. We determined that a final test accuracy greater than 30% would be acceptable.
-
-To evaluate the accuracy of the recommender system as a whole, we manually reviewed each of the ten song recommendations per user. We determined that the evaluation would be a success if each user had reasonably different song recommendations that align with the songs that they listen to and contain at least one song that they have listened to before. 
+To evaluate the accuracy of the image label predictions, we calculated the test accuracies for each epoch by comparing the expected image label with the predicted image label and calculating the percentage of predicted values that were correct. We did a similar calculation for the training accuracy. We determined that a final test accuracy greater than 30% would be acceptable.
 
 ---
 
-## Results
+## Results (TODO)
 
 Our results met the test accuracy criteria of being over 30%, as our final epoch had a test accuracy of 58%. However, this only meant that the predicted float values weren't very off from the actual values, which was easy to achieve since both the predicted and actual values were between 0 and 1. 
 
@@ -186,7 +156,7 @@ We have several possible ideas for why this model didn't work. However, because 
     We chose to use the MSE loss function we want to minimize the difference between the predicted and actual scores. However, it is possible that our loss function prevented our model from being able to properly fit the data and that there is a better loss function that we can use.
 ---
 
-## Example Outputs
+## Example Outputs (TODO)
 
 ### Output for worst model
 generating song recommendations...
