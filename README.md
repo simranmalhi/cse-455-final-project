@@ -30,7 +30,9 @@ Stakeholders for our project include both those who use ASL, primarily deaf or h
 
 ### Our Chosen Dataset: The Kaggle ASL Alphabet Dataset (featuting 29 different ASL Alphabet Characters)
 
-There are various public datasets that we could use in order to train and test our model. The main dataset we used is a collection of images of alphabets from American Sign Language, which was separated into 29 folders, each representing a character class. [ASL Alphabet Dataset](https://www.kaggle.com/datasets/grassknoted/asl-alphabet) In the dataset, there are 29 classes, of which 26 are for the letters A-Z and 3 classes for “space”, “delete” and “nothing”. While there are 29 images in this dataset for testing, we also tested with our own real-life images so we can have a better view of the usability of our model. We also ensured that the dataset split is 80% training data and 20% testing data.
+There are various public datasets that we could use in order to train and test our model. The main dataset we used is a collection of images of alphabets from American Sign Language, which was separated into 29 folders, each representing a character class. [ASL Alphabet Dataset](https://www.kaggle.com/datasets/grassknoted/asl-alphabet) 
+
+In the dataset, there are 29 classes, of which 26 are for the letters A-Z and 3 classes for “space”, “delete” and “nothing”. While there are 29 images in this dataset for testing, we also tested with our own real-life images so we can have a better view of the usability of our model. We also ensured that the dataset split is 80% training data and 20% testing data.
 
 ---
 
@@ -77,19 +79,8 @@ Finally, we then pass the predicted scores through a sigmoid function to ensure 
 
 For our loss function, we chose to use the MSE loss function because our problem is a regression problem and we are trying to minimize the difference between the predicted and actual scores.
 
-### Song Predictions (TODO: Results)
-After the model has been trained and evaluated with the training and testing data, we print out the top ten song predictions per user using the following steps:
-
-1. Convert the user onehot and track onehot encodings back to their string id representations using `onehot_to_item`.
-
-2. Get the track name and artist for each track_id
-
-3. For each user:
-    - Get the model score predictions for all of the tracks in the entire dataset
-
-    - Sort the (track_id, scores) from highest to lowest scores
-
-    - Print out the track name and artist for the first ten (track_id, score) items in the sorted list
+### Model Results
+After the model has been trained and evaluated with the training and testing data, we plot out four graphs based on training loss, training accuracy, testing loss, and testing accuracy of model. We then compared the testing accuracies and training accuracies of multiple experiments with varying hyperparameters to find the best results.
 
 ---
 
@@ -108,7 +99,7 @@ For our experiments, we experimented with changing our epochs, learning rate, mo
    
    3. Trained the model through invoking methods from `model.py`, including `model.train`, `model.test`, and `model.train_acc`. When training, per epoch it prints out the training loss for each batch along with the average test loss and test accuracy.
 
-   4. Plotted/Graphed 4 graphs based on training loss, training accuracy, testing loss, and testing accuracy of model
+   4. Plotted/Graphed four graphs based on training loss, training accuracy, testing loss, and testing accuracy of model
 
 TODO
 
