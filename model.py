@@ -18,7 +18,7 @@ class ConvNet(nn.Module):
         self.c4 = nn.Conv2d(24, 48, filter_size)
         self.c5 = nn.Conv2d(48, 64, filter_size)
 
-        # image size is hardcoded and should be updated if layer output changes
+        # in_features is hardcoded and should be updated if layer output changes
         self.output = nn.Linear(2073600, LETTER_OUTPUT)
 
     def forward(self, x):
