@@ -104,17 +104,17 @@ For our experiments, we experimented with changing our epochs, learning rate, mo
 
 Our worst model trained for 5 epochs and had a learning rate of 0.002, a momentum of 0.9, and a weight decay of 0.1.
 This had a final training accuracy of 85% and a final testing accuracy of 9.2%.
-![img1](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/worst-test-acc.png)
-![img2](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/worst-test-loss.png)
-![img3](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/worst-train-acc.png)
-![img4](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/worst-train-loss.png)
+![img1](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/worst_test_acc.png)
+![img2](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/worst_test_loss.png)
+![img3](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/worst_train_acc.png)
+![img4](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/worst_train_loss.png)
 
 Our best model trained for 5 epochs and had a learning rate of 0.002, a momentum of 0.9, and a weight decay of 0.005.
 This had a final training accuracy of 98% and a final testing accuracy of 18%.
-![img5](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/best-test-acc.png)
-![img6](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/best-test-loss.png)
-![img7](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/best-train-acc.png)
-![img8](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/best-train-loss.png)
+![img5](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/best_test_acc.png)
+![img6](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/best_test_loss.png)
+![img7](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/best_train_acc.png)
+![img8](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/best_train_loss.png)
 
 
 ### Evaluation
