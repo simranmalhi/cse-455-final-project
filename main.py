@@ -15,26 +15,17 @@ print("making model...")
 TRAIN_BATCH_SIZE = dp.BATCH_SIZE
 TEST_BATCH_SIZE = dp.BATCH_SIZE
 EPOCHS = 5
-LEARNING_RATE = 0.002 # default: 0.01
-MOMENTUM = 0.9 # default: 0.9
-WEIGHT_DECAY = 0.005 # default: 0.0
+LEARNING_RATE = 0.002
+MOMENTUM = 0.9
+WEIGHT_DECAY = 0.005
 PRINT_INTERVAL = 10
 m = n.ConvNet()
 print("done")
 print()
 
 print("training...")
-# TODO: use Adam or optim.SGD?
-# optimizer = optim.Adam(m.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM, weight_decay=WEIGHT_DECAY)
 optimizer = optim.SGD(m.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY, momentum=MOMENTUM)
-
-# TODO: why is shuffle false for train_loader
-# TODO: set num_workers?
-# train_loader = torch.utils.data.DataLoader(train_data, batch_size=TRAIN_BATCH_SIZE, shuffle=False)
-# test_loader = torch.utils.data.DataLoader(test_data, batch_size=TEST_BATCH_SIZE, shuffle=False)
 train_losses, train_accuracies, test_losses, test_accuracies = [], [], [], []
-
-# TODO: GPU: use GPU if available(?), uncomment on Colab
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 m.to(device)
 
