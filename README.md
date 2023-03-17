@@ -130,9 +130,9 @@ We would have experimented more with different network architectures to find a m
 
 ---
 
-## Video (TODO)
+## Video
 
-Demo video can be found [here](https://github.com/deeptii-20/cse-490g1-final-project/blob/main/cse490g1-final-project-video.mp4).
+Demo video can be found [here](https://github.com/simranmalhi/cse-455-final-project/blob/main/results/Training%20an%20ASL%20detector.mp4).
 
 ---
 
