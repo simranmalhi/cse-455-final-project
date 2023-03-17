@@ -1,6 +1,7 @@
 # cse-455-final-project
-Simran Malhi, Ash Luty, Amrutha Srikanth, Nik Smith
+Group Members: Simran Malhi, Ash Luty, Amrutha Srikanth, Nik Smith
 
+Files:
 main.py = for training the model and getting results (used for running experiments)
 
 model.py = model implementation
