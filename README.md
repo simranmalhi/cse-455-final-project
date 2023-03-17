@@ -92,7 +92,7 @@ After the model has been trained and evaluated with the training and testing dat
 
 ### Experiments
 
-For our experiments, we experimented with changing our epochs, learning rate, momentum, and weight decay to improve our test accuracies. As a reminder, we gathered the user data for our experiments by downloading the ASL Alphabet Kaggle Dataset and running `data_parsing.py` to organize the datasets into training and testing dataloaders. We then ran our experiments by running `main.py`, which:
+For our experiments, we experimented with changing our learning rate, momentum, and weight decay to improve our test accuracies. As a reminder, we gathered the user data for our experiments by downloading the ASL Alphabet Kaggle Dataset and running `data_parsing.py` to organize the datasets into training and testing dataloaders. We then ran our experiments by running `main.py`, which:
 
    1. Loaded and processed the training and testing data from the dataloaders provided by `data_parsing.py`.
 
